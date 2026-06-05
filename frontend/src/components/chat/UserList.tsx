@@ -26,13 +26,7 @@ export default function UserList({
 
           return (
             <List.Item
-              onClick={() =>
-                setSelectedUser({
-                  id,
-                  name: user.name,
-                  online: user.online,
-                })
-              }
+              onClick={() => setSelectedUser({ ...user, id } as User)}
               style={{
                 cursor: "pointer",
                 background: isActive ? "#f0f5ff" : "transparent",

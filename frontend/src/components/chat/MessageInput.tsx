@@ -3,15 +3,11 @@ import { useState } from "react";
 import { socket } from "../../api/socket";
 import { SendOutlined } from "@ant-design/icons";
 
-type SelectedUser = {
-  id?: string | null;
-};
-
 type MessageInputProps = {
-  selectedUser?: SelectedUser;
+  selectedUserId?: string | null;
 };
 
-export default function MessageInput({ selectedUser }: MessageInputProps) {
+export default function MessageInput({ selectedUserId }: MessageInputProps) {
   const [text, setText] = useState("");
 
   const send = () => {
@@ -19,30 +15,42 @@ export default function MessageInput({ selectedUser }: MessageInputProps) {
 
     const data = {
       text,
-      username: "Me",
-      time: new Date().toLocaleTimeString().slice(0, 5),
-      targetId: selectedUser?.id,
+      time: new Date().toLocaleTimeString("uz-UZ", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      targetId: selectedUserId ?? null,
     };
 
-    if (selectedUser) {
-      socket.emit("private_message", data);
-    } else {
-      socket.emit("message", data);
-    }
-
+    socket.emit(selectedUserId ? "private_message" : "message", data);
     setText("");
   };
 
   return (
-    <div style={{ padding: 10, display: "flex", gap: 10 }}>
+    <div
+      style={{
+        padding: "10px 12px",
+        display: "flex",
+        gap: 8,
+        borderTop: "1px solid #f0f0f0",
+      }}
+    >
       <Input
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Type message..."
+        placeholder="Xabar yozing..."
         onPressEnter={send}
+        size="large"
+        variant="filled"
       />
-
-      <Button shape="round" type="primary" onClick={send} icon={<SendOutlined />}></Button>
+      <Button
+        type="primary"
+        shape="circle"
+        size="large"
+        icon={<SendOutlined />}
+        onClick={send}
+        disabled={!text.trim()}
+      />
     </div>
   );
 }

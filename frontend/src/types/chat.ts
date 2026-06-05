@@ -1,19 +1,29 @@
 export interface User {
   id: string;
+  username: string;
+  avatar: string;
   name: string;
-  online?: boolean;
+  online: string;
 }
 
 export interface Message {
-  id?: string;
+  id: number;
+  senderId: string;
+  receiverId?: string;
   text: string;
-  username: string;
   time: string;
+  status?: "sent" | "delivered" | "read";
+  file?: {
+    url: string;
+    name: string;
+    type: string;
+    size: number;
+  };
+}
 
-  room?: string;
-
-  from?: string; // socket id
-  to?: string; // private chat uchun
-
-  read?: boolean;
+export interface Chat {
+  id: string;
+  name: string;
+  avatar: string;
+  isGroup: boolean;
 }
